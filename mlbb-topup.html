@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MLBB Diamond Top-Up — DiamondDrop MY</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:#0A0E1A; --card:#0F1629; --card2:#131929; --blue:#1E90FF;
+    --blue-dim:#1265c4; --gold:#FFD700; --gold-dim:#c9a800; --pink:#FF2D78;
+    --green:#22c55e; --text:#E8EAF0; --muted:#7A84A0; --border:#1E2740; --radius:14px;
+  }
+  body { background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; min-height:100vh; }
+
+  /* BACK BAR */
+  .back-bar { background:#080C18; border-bottom:1px solid var(--border); padding:0 20px; }
+  .back-bar-inner { max-width:900px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:42px; font-size:0.78rem; }
+  .back-home { display:flex; align-items:center; gap:6px; color:var(--muted); text-decoration:none; font-weight:500; transition:color 0.2s; }
+  .back-home:hover { color:var(--text); }
+  .back-breadcrumb { display:flex; align-items:center; gap:6px; color:var(--muted); font-size:0.72rem; }
+  .crumb-active { color:var(--text); }
+
+  /* SALE BANNER */
+  .sale-banner { background:linear-gradient(90deg,#7c3aed,#c026d3,#e11d48); padding:0 20px; position:relative; overflow:hidden; }
+  .sale-banner::before { content:''; position:absolute; inset:0; background:repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(255,255,255,0.04) 40px,rgba(255,255,255,0.04) 41px); }
+  .sale-banner-inner { max-width:900px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 0; position:relative; flex-wrap:wrap; }
+  .sale-left { display:flex; align-items:center; gap:10px; }
+  .sale-fire { font-size:1.2rem; animation:wiggle 1.2s infinite; }
+  @keyframes wiggle { 0%,100%{transform:rotate(-8deg);} 50%{transform:rotate(8deg);} }
+  .sale-text { font-family:'Rajdhani',sans-serif; font-size:1rem; font-weight:700; letter-spacing:0.5px; color:#fff; }
+  .sale-text span { color:#fde68a; }
+  .sale-sub { font-size:0.7rem; color:rgba(255,255,255,0.75); margin-top:1px; }
+  .countdown { display:flex; align-items:center; gap:6px; }
+  .countdown-label { font-size:0.7rem; color:rgba(255,255,255,0.8); white-space:nowrap; }
+  .cd-units { display:flex; gap:4px; align-items:center; }
+  .cd-unit { background:rgba(0,0,0,0.35); border-radius:6px; min-width:38px; padding:4px 6px; text-align:center; }
+  .cd-num { font-family:'Rajdhani',sans-serif; font-size:1.15rem; font-weight:700; color:#fff; line-height:1; display:block; }
+  .cd-lbl { font-size:0.55rem; color:rgba(255,255,255,0.65); display:block; letter-spacing:0.5px; text-transform:uppercase; }
+  .cd-sep { font-family:'Rajdhani',sans-serif; font-size:1.15rem; font-weight:700; color:rgba(255,255,255,0.6); }
+
+  /* TICKER */
+  .ticker-wrap { background:#0D1220; border-bottom:1px solid var(--border); overflow:hidden; padding:0 16px; height:36px; display:flex; align-items:center; gap:10px; }
+  .ticker-label { font-size:0.62rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--green); background:#22c55e15; border:1px solid #22c55e30; padding:2px 8px; border-radius:4px; white-space:nowrap; flex-shrink:0; }
+  .ticker-dot { width:6px; height:6px; background:var(--green); border-radius:50%; flex-shrink:0; animation:pdot 1.5s infinite; }
+  @keyframes pdot { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.4;transform:scale(0.7);} }
+  .ticker-track { overflow:hidden; flex:1; }
+  .ticker-inner { display:flex; gap:48px; white-space:nowrap; animation:tscroll 30s linear infinite; }
+  .ticker-inner:hover { animation-play-state:paused; }
+  @keyframes tscroll { 0%{transform:translateX(0);} 100%{transform:translateX(-50%);} }
+  .ticker-item { display:inline-flex; align-items:center; gap:5px; font-size:0.74rem; color:var(--muted); flex-shrink:0; }
+  .ti-name { color:var(--text); font-weight:600; }
+  .ti-pkg  { color:var(--gold); }
+  .ti-time { font-size:0.64rem; color:#3a4560; }
+
+  /* HERO */
+  .hero { background:radial-gradient(ellipse 60% 50% at 50% -10%,#1E3A6E55 0%,transparent 70%),linear-gradient(180deg,#0D1830 0%,var(--bg) 100%); border-bottom:1px solid var(--border); padding:0 20px; }
+  .hero-inner { max-width:900px; margin:0 auto; display:flex; align-items:center; gap:24px; padding:28px 0 24px; }
+  .logo-gem { width:64px; height:64px; flex-shrink:0; }
+  .hero-text h1 { font-family:'Rajdhani',sans-serif; font-size:2rem; font-weight:700; letter-spacing:1px; line-height:1.1; background:linear-gradient(135deg,#ffffff 30%,var(--gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .hero-text p { color:var(--muted); font-size:0.88rem; margin-top:4px; }
+  .hero-badge { margin-left:auto; background:linear-gradient(135deg,#1a2a50,#0f1629); border:1px solid var(--blue-dim); border-radius:8px; padding:8px 14px; text-align:center; flex-shrink:0; }
+  .hero-badge span { display:block; }
+  .hero-badge .b1 { font-size:0.7rem; color:var(--muted); }
+  .hero-badge .b2 { font-family:'Rajdhani',sans-serif; font-size:1.1rem; font-weight:700; color:var(--gold); }
+
+  /* LAYOUT */
+  .page { max-width:900px; margin:0 auto; padding:32px 20px 60px; display:grid; grid-template-columns:1fr 300px; gap:28px; align-items:start; }
+  @media(max-width:720px){ .page{grid-template-columns:1fr;} .sidebar{order:-1; position:static; top:auto;} }
+
+  .section-label { font-family:'Rajdhani',sans-serif; font-size:0.78rem; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--blue); margin-bottom:10px; }
+
+  /* PLAYER CARD */
+  .player-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:22px; margin-bottom:24px; }
+  .id-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+  .field label { display:block; font-size:0.78rem; color:var(--muted); margin-bottom:6px; }
+  .field input { width:100%; background:var(--card2); border:1px solid var(--border); border-radius:8px; padding:10px 14px; color:var(--text); font-family:'Inter',sans-serif; font-size:0.92rem; outline:none; transition:border-color 0.2s; }
+  .field input:focus { border-color:var(--blue); }
+  .field input::placeholder { color:#3a4560; }
+  .verify-btn { display:flex; align-items:center; gap:8px; background:transparent; border:1px solid var(--blue-dim); color:var(--blue); border-radius:8px; padding:10px 18px; font-size:0.88rem; font-family:'Inter',sans-serif; cursor:pointer; transition:background 0.2s,color 0.2s; }
+  .verify-btn:hover { background:var(--blue); color:#fff; }
+  .player-result { margin-top:14px; padding:12px 16px; background:#0d1f12; border:1px solid #1a4028; border-radius:8px; display:none; align-items:center; gap:12px; }
+  .player-result.show { display:flex; }
+  .player-avatar { width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,#1E90FF,#FF2D78); display:flex; align-items:center; justify-content:center; font-family:'Rajdhani',sans-serif; font-weight:700; font-size:1.1rem; color:#fff; }
+  .player-info .pname { font-weight:600; font-size:0.95rem; }
+  .player-info .pid   { font-size:0.75rem; color:var(--muted); }
+  .verified-tag { margin-left:auto; background:#1a4028; color:#4ade80; font-size:0.72rem; padding:3px 8px; border-radius:20px; font-weight:600; }
+
+  /* PACKAGES */
+  .packages-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:24px; }
+  @media(max-width:480px){ .packages-grid{grid-template-columns:repeat(2,1fr);} }
+  .pkg { background:var(--card); border:1.5px solid var(--border); border-radius:var(--radius); padding:16px 12px 14px; cursor:pointer; position:relative; text-align:center; transition:border-color 0.2s,transform 0.15s,box-shadow 0.2s; user-select:none; overflow:hidden; }
+  .pkg::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 50% 0%,#FFD70010,transparent 65%); opacity:0; transition:opacity 0.2s; }
+  .pkg:hover { border-color:#2a3a60; transform:translateY(-2px); }
+  .pkg:hover::before { opacity:1; }
+  .pkg.selected { border-color:var(--gold); box-shadow:0 0 0 1px var(--gold-dim),0 6px 24px #FFD70022; animation:pgold 2s infinite; }
+  .pkg.selected::before { opacity:1; }
+  @keyframes pgold { 0%,100%{box-shadow:0 0 0 1px var(--gold-dim),0 6px 24px #FFD70022;} 50%{box-shadow:0 0 0 2px var(--gold),0 6px 30px #FFD70040;} }
+  .pkg-badge { position:absolute; top:8px; right:8px; font-size:0.58rem; font-weight:700; letter-spacing:0.5px; padding:2px 6px; border-radius:20px; text-transform:uppercase; }
+  .badge-popular { background:var(--pink); color:#fff; }
+  .badge-best    { background:var(--gold); color:#1a1200; }
+  .badge-sale    { background:#7c3aed; color:#fff; }
+  .pkg-discount { position:absolute; top:8px; left:8px; background:linear-gradient(135deg,#ef4444,#b91c1c); color:#fff; font-size:0.56rem; font-weight:700; padding:2px 5px; border-radius:4px; letter-spacing:0.3px; }
+  .pkg-gem { width:38px; height:38px; margin:6px auto 6px; display:block; }
+  .pkg-diamonds { font-family:'Rajdhani',sans-serif; font-size:1.35rem; font-weight:700; color:var(--gold); line-height:1; }
+  .pkg-diamonds span { font-size:0.7rem; color:var(--muted); font-family:'Inter',sans-serif; font-weight:400; }
+  .pkg-bonus { font-size:0.7rem; color:#4ade80; margin:3px 0 4px; min-height:16px; }
+  .pkg-price-row { display:flex; align-items:center; justify-content:center; gap:5px; flex-wrap:wrap; }
+  .pkg-original { font-size:0.68rem; color:#4a5470; text-decoration:line-through; }
+  .pkg-price { font-family:'Rajdhani',sans-serif; font-size:1rem; font-weight:700; color:#f87171; }
+
+  /* PAYMENT */
+  .payment-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:22px; }
+  .methods-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:4px; }
+  @media(max-width:480px){ .methods-grid{grid-template-columns:repeat(2,1fr);} }
+  .method { background:var(--card2); border:1.5px solid var(--border); border-radius:10px; padding:10px 6px; cursor:pointer; text-align:center; transition:border-color 0.2s; font-size:0.75rem; color:var(--muted); }
+  .method:hover { border-color:#2a3a60; color:var(--text); }
+  .method.selected { border-color:var(--blue); color:var(--text); }
+  .method-icon { font-size:1.5rem; display:block; margin-bottom:4px; }
+
+  /* SIDEBAR */
+  .sidebar { position:sticky; top:24px; }
+  .order-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+  .order-header { background:linear-gradient(135deg,#121d3a,#0f1629); border-bottom:1px solid var(--border); padding:16px 20px; font-family:'Rajdhani',sans-serif; font-size:1.05rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
+  .order-body { padding:20px; }
+  .order-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; font-size:0.875rem; border-bottom:1px solid var(--border); }
+  .order-row:last-of-type { border-bottom:none; }
+  .order-row .label { color:var(--muted); }
+  .order-row .value { font-weight:600; }
+  .order-row .value.gold   { color:var(--gold); font-family:'Rajdhani',sans-serif; font-size:1rem; }
+  .order-row .value.strike { text-decoration:line-through; color:#4a5470; font-size:0.8rem; font-weight:400; }
+  .order-row .value.saved  { color:var(--green); font-size:0.82rem; }
+  .order-diamonds { display:flex; align-items:center; gap:10px; background:#0d1620; border:1px solid var(--border); border-radius:10px; padding:12px 16px; margin:16px 0 0; }
+  .od-text .od-amt { font-family:'Rajdhani',sans-serif; font-size:1.5rem; font-weight:700; color:var(--gold); line-height:1; }
+  .od-text .od-label { font-size:0.72rem; color:var(--muted); margin-top:2px; }
+  .empty-state { text-align:center; padding:20px 0 8px; color:var(--muted); font-size:0.85rem; }
+  .buy-btn { width:100%; margin-top:16px; padding:14px; background:linear-gradient(135deg,#1565c0,var(--blue)); border:none; border-radius:10px; color:#fff; font-family:'Rajdhani',sans-serif; font-size:1.15rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:opacity 0.2s,transform 0.1s; position:relative; overflow:hidden; }
+  .buy-btn:hover { opacity:0.9; }
+  .buy-btn:active { transform:scale(0.98); }
+  .buy-btn:disabled { opacity:0.35; cursor:not-allowed; }
+  .buy-btn::after { content:''; position:absolute; top:0; left:-100%; width:60%; height:100%; background:linear-gradient(90deg,transparent,#ffffff22,transparent); animation:shimmer 2.5s infinite; }
+  @keyframes shimmer { to{left:160%;} }
+  .secure-note { display:flex; align-items:center; justify-content:center; gap:6px; margin-top:12px; font-size:0.72rem; color:var(--muted); }
+
+  /* MODAL */
+  .modal-overlay { position:fixed; inset:0; background:#0008; display:flex; align-items:center; justify-content:center; z-index:100; opacity:0; pointer-events:none; transition:opacity 0.25s; }
+  .modal-overlay.show { opacity:1; pointer-events:all; }
+  .modal { background:var(--card); border:1px solid var(--border); border-radius:18px; padding:36px 32px; max-width:360px; width:90%; text-align:center; transform:scale(0.9); transition:transform 0.25s; }
+  .modal-overlay.show .modal { transform:scale(1); }
+  .modal-icon { font-size:3.5rem; margin-bottom:12px; }
+  .modal h2 { font-family:'Rajdhani',sans-serif; font-size:1.6rem; font-weight:700; margin-bottom:8px; }
+  .modal p { color:var(--muted); font-size:0.9rem; line-height:1.6; }
+  .modal-diamonds { font-family:'Rajdhani',sans-serif; font-size:2.5rem; font-weight:700; color:var(--gold); margin:12px 0 4px; }
+  .modal-saving { font-size:0.82rem; color:var(--green); margin-top:8px; font-weight:600; }
+  .modal-close { margin-top:20px; padding:12px 32px; background:var(--blue); color:#fff; border:none; border-radius:8px; font-family:'Rajdhani',sans-serif; font-size:1rem; font-weight:700; cursor:pointer; transition:opacity 0.2s; }
+  .modal-close:hover { opacity:0.85; }
+
+  /* PAYMENT FLOW MODAL */
+  .pay-modal { background:var(--card); border:1px solid var(--border); border-radius:18px; padding:28px 26px; max-width:380px; width:92%; text-align:center; transform:scale(0.9); transition:transform 0.25s; }
+  .modal-overlay.show .pay-modal { transform:scale(1); }
+  .pay-stage-label { font-family:'Rajdhani',sans-serif; font-size:0.72rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--blue); margin-bottom:14px; }
+  .pay-amount { font-family:'Rajdhani',sans-serif; font-size:2rem; font-weight:700; color:var(--gold); margin-bottom:4px; }
+  .pay-recipient { font-size:0.8rem; color:var(--muted); margin-bottom:18px; }
+  .pay-recipient strong { color:var(--text); }
+  .qr-box { width:180px; height:180px; margin:0 auto 16px; background:#fff; border-radius:10px; padding:10px; display:flex; align-items:center; justify-content:center; }
+  .qr-timer { font-size:0.78rem; color:var(--muted); margin-bottom:16px; }
+  .qr-timer span { color:var(--pink); font-weight:700; }
+  .pay-warn { display:flex; align-items:flex-start; gap:8px; text-align:left; background:#2a1a0d; border:1px solid #4a3218; border-radius:8px; padding:10px 12px; margin-bottom:16px; font-size:0.72rem; color:#e8b168; line-height:1.5; }
+  .pay-btn-primary { width:100%; padding:13px; background:linear-gradient(135deg,#1565c0,var(--blue)); border:none; border-radius:10px; color:#fff; font-family:'Rajdhani',sans-serif; font-size:1.05rem; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; cursor:pointer; }
+  .pay-btn-secondary { width:100%; padding:11px; background:transparent; border:1px solid var(--border); border-radius:10px; color:var(--muted); font-size:0.82rem; margin-top:8px; cursor:pointer; }
+  .spinner { width:44px; height:44px; border:3px solid var(--border); border-top-color:var(--blue); border-radius:50%; margin:6px auto 18px; animation:spin 0.9s linear infinite; }
+  @keyframes spin { to{transform:rotate(360deg);} }
+  .stall-icon { font-size:2.6rem; margin-bottom:10px; }
+  .fee-highlight { background:#1a1030; border:1px solid #3d2a5c; border-radius:10px; padding:14px; margin:14px 0; }
+  .fee-highlight .fee-amt { font-family:'Rajdhani',sans-serif; font-size:1.7rem; font-weight:700; color:#c084fc; }
+  .fee-highlight .fee-note { font-size:0.72rem; color:var(--muted); margin-top:2px; }
+  .pay-progress { display:flex; justify-content:center; gap:6px; margin-bottom:18px; }
+  .pay-progress .dot { width:6px; height:6px; border-radius:50%; background:var(--border); }
+  .pay-progress .dot.active { background:var(--blue); }
+</style>
+</head>
+<body>
+
+<!-- BACK TO HOME -->
+<div class="back-bar">
+  <div class="back-bar-inner">
+    <a href="index.html" class="back-home">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Back to Home
+    </a>
+    <div class="back-breadcrumb">
+      <a href="index.html" style="color:var(--muted);text-decoration:none">DiamondDrop MY</a>
+      <span style="color:#2a3450">›</span>
+      <span class="crumb-active">Top Up</span>
+    </div>
+  </div>
+</div>
+
+<!-- SALE BANNER -->
+<div class="sale-banner">
+  <div class="sale-banner-inner">
+    <div class="sale-left">
+      <span class="sale-fire">🔥</span>
+      <div>
+        <div class="sale-text">FLASH SALE — Save up to <span>40% OFF</span> all packages!</div>
+        <div class="sale-sub">Limited-time promo prices · Prices reset when timer hits zero</div>
+      </div>
+    </div>
+    <div class="countdown">
+      <span class="countdown-label">Ends in:</span>
+      <div class="cd-units">
+        <div class="cd-unit"><span class="cd-num" id="cd-min">05</span><span class="cd-lbl">MIN</span></div>
+        <span class="cd-sep">:</span>
+        <div class="cd-unit"><span class="cd-num" id="cd-sec">00</span><span class="cd-lbl">SEC</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LIVE TICKER -->
+<div class="ticker-wrap">
+  <span class="ticker-label">LIVE</span>
+  <div class="ticker-dot"></div>
+  <div class="ticker-track">
+    <div class="ticker-inner" id="tickerInner"></div>
+  </div>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-inner">
+    <svg class="logo-gem" viewBox="0 0 64 64" fill="none">
+      <defs>
+        <linearGradient id="gem1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#60BAFF"/><stop offset="100%" stop-color="#1E90FF"/></linearGradient>
+        <linearGradient id="gem2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#B0DFFF"/><stop offset="100%" stop-color="#1565C0"/></linearGradient>
+      </defs>
+      <polygon points="32,4 58,22 52,54 12,54 6,22" fill="url(#gem1)" opacity="0.9"/>
+      <polygon points="32,4 58,22 32,38" fill="url(#gem2)" opacity="0.7"/>
+      <polygon points="32,4 6,22 32,38" fill="#B0DFFF" opacity="0.3"/>
+      <polygon points="12,54 32,38 52,54" fill="#0D4A9A" opacity="0.6"/>
+      <polygon points="6,22 32,38 12,54" fill="#1565C0" opacity="0.5"/>
+      <polygon points="58,22 52,54 32,38" fill="#0D3A7A" opacity="0.5"/>
+      <polygon points="6,22 32,4 32,38" fill="white" opacity="0.15"/>
+    </svg>
+    <div class="hero-text">
+      <h1>MLBB Diamond Store</h1>
+      <p>DiamondDrop MY · Cheapest Top-Up in Malaysia · Instant Delivery</p>
+    </div>
+    <div class="hero-badge">
+      <span class="b1">Instant Delivery</span>
+      <span class="b2">24 / 7</span>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="page">
+  <div class="main-col">
+    <div class="player-card">
+      <div class="section-label">Step 1 — Enter Player ID</div>
+      <div class="id-row">
+        <div class="field"><label>User ID</label><input type="text" id="uid" placeholder="e.g. 123456789" maxlength="12"></div>
+        <div class="field"><label>Server ID</label><input type="text" id="sid" placeholder="e.g. 2201" maxlength="6"></div>
+      </div>
+      <button class="verify-btn" onclick="verifyPlayer()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Verify Player
+      </button>
+      <div class="player-result" id="playerResult">
+        <div class="player-avatar" id="playerAvatar">H</div>
+        <div class="player-info">
+          <div class="pname" id="playerName">HeroSlayer9000</div>
+          <div class="pid" id="playerID">ID: 123456789 · Server: 2201</div>
+        </div>
+        <div class="verified-tag">✓ Verified</div>
+      </div>
+    </div>
+
+    <div class="packages-section">
+      <div class="section-label">Step 2 — Select Diamond Package</div>
+      <div class="packages-grid" id="packagesGrid"></div>
+      <div class="payment-card">
+        <div class="section-label">Step 3 — Payment Method</div>
+        <div class="methods-grid" id="methodsGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="order-card">
+      <div class="order-header">⬡ Order Summary</div>
+      <div class="order-body">
+        <div id="emptyState" class="empty-state">Select a package to continue</div>
+        <div id="orderDetails" style="display:none">
+          <div class="order-row"><span class="label">Player</span><span class="value" id="sumPlayer">—</span></div>
+          <div class="order-row"><span class="label">Package</span><span class="value" id="sumPkg">—</span></div>
+          <div class="order-row"><span class="label">Payment</span><span class="value" id="sumPay">—</span></div>
+          <div class="order-row"><span class="label">Was</span><span class="value strike" id="sumOriginal">—</span></div>
+          <div class="order-row"><span class="label">You Pay</span><span class="value gold" id="sumPrice">—</span></div>
+          <div class="order-row"><span class="label">You Save</span><span class="value saved" id="sumSaved">—</span></div>
+          <div class="order-diamonds" id="sumDiamonds" style="display:none">
+            <svg width="32" height="32" viewBox="0 0 64 64" fill="none">
+              <polygon points="32,4 58,22 52,54 12,54 6,22" fill="#1E90FF" opacity="0.9"/>
+              <polygon points="32,4 58,22 32,38" fill="#B0DFFF" opacity="0.7"/>
+              <polygon points="32,4 6,22 32,38" fill="#B0DFFF" opacity="0.3"/>
+              <polygon points="12,54 32,38 52,54" fill="#0D4A9A" opacity="0.6"/>
+            </svg>
+            <div class="od-text">
+              <div class="od-amt" id="sumDiamondAmt">0</div>
+              <div class="od-label">Diamonds (incl. bonus)</div>
+            </div>
+          </div>
+        </div>
+        <button class="buy-btn" id="buyBtn" disabled onclick="startPayment()">Top Up Now</button>
+        <div class="secure-note">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Secure &amp; Encrypted Payment
+        </div>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<!-- PAYMENT FLOW MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div id="modalContent"></div>
+</div>
+
+<script>
+  const packages = [
+    { id:1, diamonds:11,   bonus:0,   price:'MYR 0.79',  priceNum:0.79,  original:'MYR 1.09',  origNum:1.09,  discount:'28% OFF' },
+    { id:2, diamonds:56,   bonus:0,   price:'MYR 2.39',  priceNum:2.39,  original:'MYR 3.27',  origNum:3.27,  discount:'27% OFF' },
+    { id:3, diamonds:112,  bonus:0,   price:'MYR 3.90',  priceNum:3.90,  original:'MYR 5.43',  origNum:5.43,  discount:'28% OFF', badge:'popular', badgeClass:'badge-popular' },
+    { id:4, diamonds:172,  bonus:14,  price:'MYR 7.90',  priceNum:7.90,  original:'MYR 10.84', origNum:10.84, discount:'27% OFF' },
+    { id:5, diamonds:257,  bonus:26,  price:'MYR 15.90', priceNum:15.90, original:'MYR 21.75', origNum:21.75, discount:'27% OFF', badge:'best value', badgeClass:'badge-best' },
+    { id:6, diamonds:344,  bonus:34,  price:'MYR 19.90', priceNum:19.90, original:'MYR 27.19', origNum:27.19, discount:'27% OFF' },
+    { id:7, diamonds:514,  bonus:52,  price:'MYR 23.90', priceNum:23.90, original:'MYR 32.63', origNum:32.63, discount:'27% OFF' },
+    { id:8, diamonds:706,  bonus:70,  price:'MYR 38.90', priceNum:38.90, original:'MYR 54.38', origNum:54.38, discount:'28% OFF' },
+    { id:9, diamonds:2195, bonus:220, price:'MYR 155.90',priceNum:155.90,original:'MYR 217.51',origNum:217.51,discount:'28% OFF', badge:'sale', badgeClass:'badge-sale' },
+  ];
+
+  const methods = [
+    { id:'tng',     icon:'💳', label:"Touch 'n Go" },
+    { id:'grab',    icon:'🟢', label:'GrabPay'     },
+    { id:'maybank', icon:'🏦', label:'Maybank'     },
+    { id:'boost',   icon:'🚀', label:'Boost'       },
+    { id:'card',    icon:'💳', label:'Credit Card' },
+    { id:'spay',    icon:'🛒', label:'ShopeePay'   },
+  ];
+
+  let selectedPkg = null, selectedMethod = null, playerVerified = false;
+
+  const grid = document.getElementById('packagesGrid');
+  packages.forEach(pkg => {
+    const div = document.createElement('div');
+    div.className = 'pkg';
+    div.dataset.id = pkg.id;
+    div.innerHTML = `
+      <div class="pkg-discount">${pkg.discount}</div>
+      ${pkg.badge ? `<div class="pkg-badge ${pkg.badgeClass}">${pkg.badge}</div>` : ''}
+      <svg class="pkg-gem" viewBox="0 0 64 64" fill="none">
+        <polygon points="32,4 58,22 52,54 12,54 6,22" fill="#1E90FF" opacity="0.9"/>
+        <polygon points="32,4 58,22 32,38" fill="#B0DFFF" opacity="0.7"/>
+        <polygon points="32,4 6,22 32,38" fill="#B0DFFF" opacity="0.3"/>
+        <polygon points="12,54 32,38 52,54" fill="#0D4A9A" opacity="0.6"/>
+        <polygon points="6,22 32,38 12,54" fill="#1565C0" opacity="0.5"/>
+        <polygon points="58,22 52,54 32,38" fill="#0D3A7A" opacity="0.5"/>
+      </svg>
+      <div class="pkg-diamonds">${pkg.diamonds} <span>💎</span></div>
+      <div class="pkg-bonus">${pkg.bonus > 0 ? '+'+pkg.bonus+' bonus' : '&nbsp;'}</div>
+      <div class="pkg-price-row">
+        <span class="pkg-original">${pkg.original}</span>
+        <span class="pkg-price">${pkg.price}</span>
+      </div>`;
+    div.addEventListener('click', () => selectPackage(pkg, div));
+    grid.appendChild(div);
+  });
+
+  const mgrid = document.getElementById('methodsGrid');
+  methods.forEach(m => {
+    const div = document.createElement('div');
+    div.className = 'method';
+    div.innerHTML = `<span class="method-icon">${m.icon}</span>${m.label}`;
+    div.addEventListener('click', () => selectMethod(m, div));
+    mgrid.appendChild(div);
+  });
+
+  function selectPackage(pkg, el) {
+    document.querySelectorAll('.pkg').forEach(p => p.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedPkg = pkg;
+    updateSummary();
+  }
+  function selectMethod(m, el) {
+    document.querySelectorAll('.method').forEach(p => p.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedMethod = m;
+    updateSummary();
+  }
+  function updateSummary() {
+    const hasPkg  = !!selectedPkg;
+    const hasMeth = !!selectedMethod;
+    document.getElementById('emptyState').style.display   = hasPkg ? 'none'  : 'block';
+    document.getElementById('orderDetails').style.display = hasPkg ? 'block' : 'none';
+    if (hasPkg) {
+      const saving = (selectedPkg.origNum - selectedPkg.priceNum).toFixed(2);
+      document.getElementById('sumPlayer').textContent   = playerVerified ? document.getElementById('playerName').textContent : '—';
+      document.getElementById('sumPkg').textContent      = selectedPkg.diamonds+'💎'+(selectedPkg.bonus?' +'+selectedPkg.bonus:'');
+      document.getElementById('sumPay').textContent      = hasMeth ? selectedMethod.label : '—';
+      document.getElementById('sumOriginal').textContent = selectedPkg.original;
+      document.getElementById('sumPrice').textContent    = selectedPkg.price;
+      document.getElementById('sumSaved').textContent    = 'MYR '+saving+' ('+selectedPkg.discount+')';
+      document.getElementById('sumDiamonds').style.display = 'flex';
+      document.getElementById('sumDiamondAmt').textContent = selectedPkg.diamonds + selectedPkg.bonus;
+    }
+    document.getElementById('buyBtn').disabled = !(playerVerified && hasPkg && hasMeth);
+  }
+  function verifyPlayer() {
+    const uid = document.getElementById('uid').value.trim();
+    const sid = document.getElementById('sid').value.trim();
+    if (!uid || !sid) { alert('Please enter both User ID and Server ID.'); return; }
+    let name;
+    if (uid === '536076634' && sid === '5138') {
+      name = 'Kzumi';
+    } else {
+      const names = ['LegendSlayer','CrystalWing','ShadowBlade','StarForge','IronPhoenix'];
+      name = names[Math.floor(Math.random()*names.length)] + Math.floor(Math.random()*99+1);
+    }
+    document.getElementById('playerName').textContent    = name;
+    document.getElementById('playerID').textContent      = 'ID: '+uid+' · Server: '+sid;
+    document.getElementById('playerAvatar').textContent  = name[0].toUpperCase();
+    document.getElementById('playerResult').classList.add('show');
+    playerVerified = true;
+    updateSummary();
+  }
+  /* ---------- FAKE QR GENERATOR (visual only, not a real payment code) ---------- */
+  function fakeQR() {
+    let cells = '';
+    const size = 21, cell = 8;
+    // seed a few fixed "finder" squares like a real QR so it reads as legit at a glance
+    const finder = (x,y) => `
+      <rect x="${x}" y="${y}" width="${cell*7}" height="${cell*7}" fill="#000"/>
+      <rect x="${x+cell}" y="${y+cell}" width="${cell*5}" height="${cell*5}" fill="#fff"/>
+      <rect x="${x+cell*2}" y="${y+cell*2}" width="${cell*3}" height="${cell*3}" fill="#000"/>`;
+    for (let r=0;r<size;r++) for (let c=0;c<size;c++) {
+      if ((r<7&&c<7)||(r<7&&c>size-8)||(r>size-8&&c<7)) continue;
+      if (Math.random() > 0.55) cells += `<rect x="${c*cell}" y="${r*cell}" width="${cell}" height="${cell}" fill="#000"/>`;
+    }
+    return `<svg viewBox="0 0 ${size*cell} ${size*cell}" width="160" height="160">
+      <rect width="100%" height="100%" fill="#fff"/>${cells}
+      ${finder(0,0)}${finder((size-7)*cell,0)}${finder(0,(size-7)*cell)}
+    </svg>`;
+  }
+
+  let qrSecs = 300, qrTimerRef = null, feeSecs = 120, feeTimerRef = null;
+  const RECIPIENT_NAME = 'Ahmad Zulkarnain'; // personal name, not a registered business — the red flag
+
+  function startPayment() {
+    if (!selectedPkg || !selectedMethod || !playerVerified) return;
+    document.getElementById('modalOverlay').classList.add('show');
+    renderQRStage();
+  }
+
+  function renderQRStage() {
+    qrSecs = 300;
+    const amt = selectedPkg.price.replace('MYR ', '');
+    document.getElementById('modalContent').innerHTML = `
+      <div class="pay-modal">
+        <div class="pay-progress"><div class="dot active"></div><div class="dot"></div><div class="dot"></div></div>
+        <div class="pay-stage-label">Scan to Pay · ${selectedMethod.label}</div>
+        <div class="pay-amount">RM ${amt}</div>
+        <div class="pay-recipient">Paying <strong>${RECIPIENT_NAME}</strong></div>
+        <div class="qr-box">${fakeQR()}</div>
+        <div class="qr-timer">QR expires in <span id="qrCountdown">05:00</span></div>
+        <button class="pay-btn-primary" onclick="renderVerifyingStage()">I've Made the Payment</button>
+        <button class="pay-btn-secondary" onclick="closeModal()">Cancel</button>
+      </div>`;
+    clearInterval(qrTimerRef);
+    qrTimerRef = setInterval(() => {
+      qrSecs--;
+      const m = String(Math.floor(qrSecs/60)).padStart(2,'0');
+      const s = String(qrSecs%60).padStart(2,'0');
+      const el = document.getElementById('qrCountdown');
+      if (el) el.textContent = m+':'+s;
+      if (qrSecs <= 0) clearInterval(qrTimerRef);
+    }, 1000);
+  }
+
+  function renderVerifyingStage() {
+    clearInterval(qrTimerRef);
+    document.getElementById('modalContent').innerHTML = `
+      <div class="pay-modal">
+        <div class="pay-progress"><div class="dot active"></div><div class="dot active"></div><div class="dot"></div></div>
+        <div class="pay-stage-label">Verifying Payment</div>
+        <div class="spinner"></div>
+        <p style="color:var(--muted);font-size:0.85rem;">Confirming your transfer of <strong style="color:var(--text)">RM ${selectedPkg.price.replace('MYR ','')}</strong>...<br>This usually takes a few seconds.</p>
+      </div>`;
+    setTimeout(renderStallStage, 2600);
+  }
+
+  function renderStallStage() {
+    feeSecs = 120;
+    document.getElementById('modalContent').innerHTML = `
+      <div class="pay-modal">
+        <div class="pay-progress"><div class="dot active"></div><div class="dot active"></div><div class="dot"></div></div>
+        <div class="stall-icon">⚠️</div>
+        <div class="pay-stage-label" style="color:#e8b168">Transaction On Hold</div>
+        <p style="color:var(--muted);font-size:0.85rem;line-height:1.5;">Server synchronization error. Your diamonds are ready but the system requires a one-time <strong style="color:var(--text)">account activation fee</strong> to release the transfer.</p>
+        <div class="fee-highlight">
+          <div class="fee-amt">RM 15.00</div>
+          <div class="fee-note">Activation Fee · Refundable</div>
+        </div>
+        <div class="pay-warn">⚠️ <span>If this fee is not paid within the timer, your diamonds and original payment will be forfeited.</span></div>
+        <div class="qr-box">${fakeQR()}</div>
+        <div class="qr-timer">Time remaining: <span id="feeCountdown">02:00</span></div>
+        <button class="pay-btn-primary" onclick="renderFakeSuccessStage()">I've Paid the Fee</button>
+        <button class="pay-btn-secondary" onclick="closeModal()">Cancel Transaction</button>
+      </div>`;
+    clearInterval(feeTimerRef);
+    feeTimerRef = setInterval(() => {
+      feeSecs--;
+      const m = String(Math.floor(feeSecs/60)).padStart(2,'0');
+      const s = String(feeSecs%60).padStart(2,'0');
+      const el = document.getElementById('feeCountdown');
+      if (el) el.textContent = m+':'+s;
+      if (feeSecs <= 0) clearInterval(feeTimerRef);
+    }, 1000);
+  }
+
+  function renderFakeSuccessStage() {
+    clearInterval(feeTimerRef);
+    const saving = (selectedPkg.origNum - selectedPkg.priceNum).toFixed(2);
+    document.getElementById('modalContent').innerHTML = `
+      <div class="pay-modal">
+        <div class="pay-progress"><div class="dot active"></div><div class="dot active"></div><div class="dot active"></div></div>
+        <div class="modal-icon">💎</div>
+        <h2 style="font-family:'Rajdhani',sans-serif;font-size:1.5rem;font-weight:700;margin-bottom:8px;">Top-Up Successful!</h2>
+        <div class="modal-diamonds" style="font-size:2.2rem;">${(selectedPkg.diamonds+selectedPkg.bonus)} 💎</div>
+        <p style="color:var(--muted);font-size:0.88rem;line-height:1.5;">Diamonds have been sent to<br><strong style="color:var(--text)">${document.getElementById('playerName').textContent}</strong>.<br>Check your in-game inbox.</p>
+        <div class="modal-saving">🎉 You saved MYR ${saving} on this purchase!</div>
+        <button class="modal-close" onclick="closeModal()">Done</button>
+      </div>`;
+  }
+
+  function closeModal() {
+    clearInterval(qrTimerRef); clearInterval(feeTimerRef);
+    document.getElementById('modalOverlay').classList.remove('show');
+  }
+  document.getElementById('modalOverlay').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal(); });
+
+  /* COUNTDOWN */
+  let totalSecs = 5*60;
+  function tick() {
+    document.getElementById('cd-min').textContent = String(Math.floor(totalSecs/60)).padStart(2,'0');
+    document.getElementById('cd-sec').textContent = String(totalSecs%60).padStart(2,'0');
+    totalSecs = totalSecs > 0 ? totalSecs-1 : 5*60;
+  }
+  tick(); setInterval(tick, 1000);
+
+  /* TICKER */
+  const tNames = ['Ahmad F.','Nurul A.','Haziq M.','Siti R.','Danial K.','Aisha B.','Firdaus Z.','Liyana S.','Izzat H.','Raihanah T.','Syafiq N.','Farah L.','Amirul Q.','Nadiah Y.','Kevin C.','Brandon L.','Priya K.','Harish V.','Zharif R.','Aina S.'];
+  const tPkgs  = ['11 💎','56 💎','112 💎','172 💎 +14','257 💎 +26','344 💎 +34','514 💎 +52','706 💎 +70','2,195 💎 +220'];
+  const tTimes = ['just now','1 min ago','2 min ago','3 min ago','5 min ago'];
+  function buildTicker() {
+    let html = '';
+    for (let i=0; i<16; i++) {
+      const n = tNames[Math.floor(Math.random()*tNames.length)];
+      const p = tPkgs[Math.floor(Math.random()*tPkgs.length)];
+      const t = tTimes[Math.floor(Math.random()*tTimes.length)];
+      html += `<span class="ticker-item"><span>💎</span><span class="ti-name">${n}</span><span>bought</span><span class="ti-pkg">${p}</span><span class="ti-time">· ${t}</span></span>`;
+    }
+    document.getElementById('tickerInner').innerHTML = html+html;
+  }
+  buildTicker(); setInterval(buildTicker, 30000);
+</script>
+</body>
+</html>
